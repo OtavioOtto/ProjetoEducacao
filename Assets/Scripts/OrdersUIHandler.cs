@@ -1,37 +1,71 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class OrdersUIHandler : MonoBehaviour, IEndDragHandler, IPointerClickHandler
+public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerClickHandler, IBeginDragHandler
 {
     [SerializeField] private Canvas canvas;
     [SerializeField] private Transform spawn;
     [SerializeField] private float targetYPosition = 0f;
+    [SerializeField] private float dragThreshold = 10f;
+
     private RectTransform rectTransform;
     private bool draggable = true;
     private bool isDragging = false;
+    private Vector2 dragStartPosition;
+    private CanvasGroup canvasGroup;
+    private bool isPotentialDrag = true;
 
-    public void DragHandler(BaseEventData data)
+    private void Awake()
     {
-        if (draggable)
+        rectTransform = GetComponent<RectTransform>();
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+    }
+
+    private void Start()
+    {
+        canvas = GameObject.Find("GameplayCanvas").GetComponent<Canvas>();
+        spawn = GameObject.Find("OrdersSpawn").GetComponent<Transform>();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        dragStartPosition = eventData.position;
+        isDragging = false;
+        isPotentialDrag = true;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!draggable) return;
+
+        // Check if we've moved past the drag threshold
+        if (isPotentialDrag && Vector2.Distance(eventData.position, dragStartPosition) > dragThreshold)
         {
             isDragging = true;
-            PointerEventData pointerData = (PointerEventData)data;
+            isPotentialDrag = false;
+            canvasGroup.alpha = 0.8f;
+        }
 
-            if (rectTransform == null)
-                rectTransform = GetComponent<RectTransform>();
+        if (!isDragging) return;
 
+        if (rectTransform == null)
+            rectTransform = GetComponent<RectTransform>();
+
+        RectTransform canvasRect = (RectTransform)canvas.transform;
+        Vector2 targetPos;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, eventData.position, canvas.worldCamera, out targetPos))
+        {
+            Vector3 worldTarget = canvas.transform.TransformPoint(targetPos);
+
+            // Get boundaries
             Vector3[] objectCorners = new Vector3[4];
             rectTransform.GetWorldCorners(objectCorners);
 
-            RectTransform canvasRect = (RectTransform)canvas.transform;
             Vector3[] canvasCorners = new Vector3[4];
             canvasRect.GetWorldCorners(canvasCorners);
-
-            Vector2 targetPos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, pointerData.position, canvas.worldCamera, out targetPos);
-
-            Vector3 worldTarget = canvas.transform.TransformPoint(targetPos);
 
             float width = objectCorners[2].x - objectCorners[0].x;
             float height = objectCorners[2].y - objectCorners[0].y;
@@ -50,28 +84,32 @@ public class OrdersUIHandler : MonoBehaviour, IEndDragHandler, IPointerClickHand
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (rectTransform == null)
-            rectTransform = GetComponent<RectTransform>();
-        Vector3 localPos = rectTransform.localPosition;
-        localPos.y = targetYPosition;
-        rectTransform.localPosition = localPos;
+        canvasGroup.alpha = 1f;
 
-        Invoke(nameof(ResetDragFlag), 0.1f);
-    }
+        if (isDragging)
+        {
+            Vector3 localPos = rectTransform.localPosition;
+            localPos.y = targetYPosition;
+            rectTransform.localPosition = localPos;
+        }
 
-    private void ResetDragFlag()
-    {
         isDragging = false;
+        isPotentialDrag = false;
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
+
+        // Don't process click if it was a drag
         if (isDragging)
+        {
             return;
+        }
+
 
         if (gameObject.transform.parent.name.Equals("OrdersSpawn"))
         {
-            if (rectTransform == null)
-                rectTransform = GetComponent<RectTransform>();
+            // Move to center for cooking
             gameObject.transform.SetParent(canvas.gameObject.transform);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
             Vector3 localPos = rectTransform.localPosition;
@@ -83,8 +121,7 @@ public class OrdersUIHandler : MonoBehaviour, IEndDragHandler, IPointerClickHand
         }
         else
         {
-            if (rectTransform == null)
-                rectTransform = GetComponent<RectTransform>();
+            // Return to spawn area
             gameObject.transform.SetParent(spawn);
             rectTransform.pivot = new Vector2(0.5f, 1f);
             Vector3 localPos = rectTransform.localPosition;

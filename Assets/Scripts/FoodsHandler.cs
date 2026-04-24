@@ -1,17 +1,21 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class FoodsHandler : MonoBehaviour
+public class FoodsHandler : MonoBehaviour, IPointerClickHandler
 {
-    private RectTransform rectTransform;
-    [SerializeField] Transform position;
-    [SerializeField] GameObject prefab;
+    [SerializeField] private Transform position;
+    [SerializeField] private GameObject prefab;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        ChooseFood();
+    }
+
     public void ChooseFood()
     {
-        
-        GameObject instance = Instantiate(prefab,position);
-        instance.transform.SetParent(position);
-        if (rectTransform == null)
-            rectTransform = instance.GetComponent<RectTransform>();
-        rectTransform.localPosition = new Vector3(0,0,0);
+        if (prefab == null || position == null) return;
+
+        GameObject instance = Instantiate(prefab, position);
+        instance.GetComponent<RectTransform>().sizeDelta *= 2;
     }
 }

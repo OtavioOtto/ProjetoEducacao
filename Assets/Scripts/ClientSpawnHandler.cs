@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class ClientSpawnHandler : MonoBehaviour
@@ -8,11 +9,16 @@ public class ClientSpawnHandler : MonoBehaviour
     [Header("Objects")]
     [SerializeField] private GameObject[] clients = new GameObject[6];
     [SerializeField] private GameObject order;
+    [SerializeField] private GameObject textBG;
+    [SerializeField] private TMP_Text dialogue;
     [Header("Transforms")]
     [SerializeField] private Transform orderPos;
     [SerializeField] private Transform spawnPosition;
+    [SerializeField] private Transform finalPosition;
     [Header("Scrtips")]
     [SerializeField] private OrdersHandler handler;
+    [Header("Mapping")]
+    [SerializeField] private IngredientMapping ingredientMapping;
 
     private bool isSpawning = false;
 
@@ -27,15 +33,15 @@ public class ClientSpawnHandler : MonoBehaviour
 
         if (currentDay == 1)
         {
-            InvokeRepeating(nameof(SpawnClientDay1), 20f, 30f); 
+            InvokeRepeating(nameof(SpawnClientDay1), 7f, 10f); 
         }
         else if (currentDay == 2)
         {
-            InvokeRepeating(nameof(SpawnClientDay2), 10f, 30f);
+            InvokeRepeating(nameof(SpawnClientDay2), 5f, 20f);
         }
         else if (currentDay == 3)
         {
-            InvokeRepeating(nameof(SpawnClientDay3), 5f, 30f);
+            InvokeRepeating(nameof(SpawnClientDay3), 3f, 15f);
         }
         else
         {
@@ -74,18 +80,104 @@ public class ClientSpawnHandler : MonoBehaviour
         if (spawn <= 5)
         {
             int which = Random.Range(0, clients.Length);
-            GameObject client = Instantiate(clients[which], spawnPosition.position, Quaternion.identity, spawnPosition);
-            GameObject newOrder = Instantiate(order, orderPos.position, Quaternion.identity, orderPos);
-            string[] ingredients = handler.ReturnIngredients();
-            newOrder.transform.GetChild(1).GetComponent<TMP_Text>().text = string.Join(", ", ingredients);
-            isSpawning = false;
-            StartCoroutine(DestroyNPC(client));
+            StartCoroutine(SpawnNPCAndOrder(which));
+            
         }
+    }
+
+    private IEnumerator SpawnNPCAndOrder(int which) 
+    {
+        GameObject client = Instantiate(clients[which], spawnPosition.position, Quaternion.identity, spawnPosition);
+
+        yield return null;
+
+        float elapsedTime = 0f;
+        float moveDuration = 1.7f;
+
+        Vector3 startPos = client.transform.position;
+        Vector3 endPos = finalPosition.position;
+        
+
+        while (elapsedTime < moveDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / moveDuration;
+            client.transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        textBG.SetActive(true);
+        dialogue.text = ChooseText();
+
+        client.transform.position = endPos;
+
+        GameObject newOrder = Instantiate(order, orderPos.position, Quaternion.identity, orderPos);
+        string[] ingredients = handler.ReturnIngredients();
+        Transform imagesParent = newOrder.transform.GetChild(1);
+        for(int i = 0; i < ingredients.Length; i++) 
+        {
+            GameObject ingredientPrefab = ingredientMapping.GetPrefab(ingredients[i]);
+            if (ingredientPrefab != null)
+            {
+                for(int j = 0; j < imagesParent.childCount; j++) 
+                {
+                    if (imagesParent.GetChild(j).childCount == 0)
+                    {
+                        GameObject instance = Instantiate(ingredientPrefab, imagesParent.GetChild(j));
+                        instance.GetComponent<RectTransform>().sizeDelta /= 1.2f;
+                        break;
+                    }
+                    
+                }
+                
+            }
+        }
+        
+
+        isSpawning = false;
+        StartCoroutine(DestroyNPC(client));
     }
 
     private IEnumerator DestroyNPC(GameObject target) 
     {
         yield return new WaitForSeconds(7.0f);
+
+        float elapsedTime = 0f;
+        float moveDuration = 1.4f;
+
+        textBG.SetActive(false);
+
+        Vector3 startPos = target.transform.position;
+        Vector3 endPos = spawnPosition.position;
+
+        while (elapsedTime < moveDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / moveDuration;
+            target.transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
         Destroy(target);
+    }
+
+    private string ChooseText() 
+    {
+        string text = "";
+        int random = Random.Range(1, 4);
+
+        switch (random)
+        {
+            case 1:
+                text = "Ola! Tudo bem? Eu gostaria de fazer meu pedido!";
+                break;
+            case 2:
+                text = "Oii! Como vai? Esse vai ser meu pedido!";
+                break;
+            case 3:
+                text = "Oie! Como voce esta? Vou querer isso!";
+                break;
+        }
+        return text;
     }
 }

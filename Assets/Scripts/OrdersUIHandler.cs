@@ -7,6 +7,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     [SerializeField] private Transform spawn;
     [SerializeField] private float targetYPosition = 0f;
     [SerializeField] private float dragThreshold = 10f;
+    [SerializeField] private GameObject cookBttn;
 
     private RectTransform rectTransform;
     private bool draggable = true;
@@ -14,6 +15,9 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     private Vector2 dragStartPosition;
     private CanvasGroup canvasGroup;
     private bool isPotentialDrag = true;
+    private float remainingTime;
+
+    TimeLimitSlider timer;
 
     private void Awake()
     {
@@ -21,12 +25,22 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        if (timer == null)
+            timer = transform.GetComponentInChildren<TimeLimitSlider>();
     }
 
     private void Start()
     {
         canvas = GameObject.Find("GameplayCanvas").GetComponent<Canvas>();
         spawn = GameObject.Find("OrdersSpawn").GetComponent<Transform>();
+    }
+
+    private void FixedUpdate()
+    {
+        remainingTime = timer.GetTimeValue();
+        if (remainingTime == 0)
+            Destroy(gameObject);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -117,12 +131,14 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
             localPos.x = 0;
             rectTransform.localPosition = localPos;
             rectTransform.localScale *= 2.5f;
+            cookBttn.SetActive(true);
             draggable = false;
         }
         else
         {
             // Return to spawn area
             gameObject.transform.SetParent(spawn);
+            cookBttn.SetActive(false);
             rectTransform.pivot = new Vector2(0.5f, 1f);
             Vector3 localPos = rectTransform.localPosition;
             localPos.y = targetYPosition;

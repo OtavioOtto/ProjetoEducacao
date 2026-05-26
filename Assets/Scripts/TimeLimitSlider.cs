@@ -31,4 +31,9 @@ public class TimeLimitSlider : MonoBehaviour
 
         slider.value = currentTime / maxTime;
     }
+
+    public float GetTimeValue() 
+    {
+        return currentTime;
+    }
 }

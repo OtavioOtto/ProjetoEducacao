@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b845c179ccfb0438b245d55912a888, type: 3}
+  m_Name: Ingridients
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientMapping
+  ingredientPrefabs:
+  - ingredientName: TOMATE
+    prefab: {fileID: 3547924584508350556, guid: 03afa1a73055789429c3d30fcae0c303, type: 3}
+  - ingredientName: CARNE
+    prefab: {fileID: 3813465137865252968, guid: 0fdbb662fcef00e408538122015fb1e4, type: 3}
+  - ingredientName: CEBOLA
+    prefab: {fileID: 4583794860071670118, guid: 77fe82c80f54dfe4092e5f8e9a75b75b, type: 3}
+  - ingredientName: BANANA
+    prefab: {fileID: 8053590651955973535, guid: 2b3465396ccd5034699e7cbb964c45c9, type: 3}
+  - ingredientName: QUEIJO
+    prefab: {fileID: 4830267479180104432, guid: 97cd23a15db0d8341874b4f2275f7412, type: 3}

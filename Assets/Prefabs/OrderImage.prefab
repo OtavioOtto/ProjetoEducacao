@@ -190,6 +190,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e236060f6d2ec54eb796b48a6ffd518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClientSceneChanger
+  prefabOrder: {fileID: 2911481540591627021, guid: 7daf6ec399910fd45bf3485495169c6c, type: 3}
+  timer: {fileID: 8288064451310538610}
+  timerSlider: {fileID: 2226482491708853085}
+  food1: {fileID: 986460047267009885}
+  food2: {fileID: 2177379121667945701}
+  food3: {fileID: 3812840100468909472}
+  food4: {fileID: 3869920822942295294}
+  food5: {fileID: 3054923212132519395}
 --- !u!1 &2177379121667945701
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,6 +521,7 @@ MonoBehaviour:
   targetYPosition: 0
   dragThreshold: 10
   cookBttn: {fileID: 1522830281143714326}
+  shadow: {fileID: 0}
 --- !u!1 &3812840100468909472
 GameObject:
   m_ObjectHideFlags: 0

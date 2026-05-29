@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TimeLimitSlider : MonoBehaviour
 {
-    [SerializeField] private float maxTime = 30f;
+    public float maxTime = 30f;
 
     private Slider slider;
     private float currentTime;
@@ -15,8 +16,22 @@ public class TimeLimitSlider : MonoBehaviour
 
     private void Start()
     {
-        currentTime = maxTime;
-        slider.value = 1f;
+        Scene activeScene = SceneManager.GetActiveScene();
+        if (activeScene.name != "CookingScene")
+        {
+            currentTime = maxTime;
+            slider.value = 1f;
+        }
+
+        else 
+        {
+            //OrderInfo info = GameObject.Find("OrderInfo(Clone)").GetComponent<OrderInfo>();
+            //if(info != null) 
+            //{
+            //    slider.value = info.GetCurrentTime();
+            //    slider.maxValue = info.GetTime();
+            //}
+        }
     }
 
     private void Update()

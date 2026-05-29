@@ -19,6 +19,8 @@ public class ClientSpawnHandler : MonoBehaviour
     [SerializeField] private OrdersHandler handler;
     [Header("Mapping")]
     [SerializeField] private IngredientMapping ingredientMapping;
+    [Header("SFX")]
+    [SerializeField] private AudioSource soundEffect;
 
     private bool isSpawning = false;
 
@@ -33,7 +35,7 @@ public class ClientSpawnHandler : MonoBehaviour
 
         if (currentDay == 1)
         {
-            InvokeRepeating(nameof(SpawnClientDay1), 7f, 10f); 
+            InvokeRepeating(nameof(SpawnClientDay1), 0f, 10f); 
         }
         else if (currentDay == 2)
         {
@@ -87,6 +89,7 @@ public class ClientSpawnHandler : MonoBehaviour
 
     private IEnumerator SpawnNPCAndOrder(int which) 
     {
+        soundEffect.Play();
         GameObject client = Instantiate(clients[which], spawnPosition.position, Quaternion.identity, spawnPosition);
 
         yield return null;

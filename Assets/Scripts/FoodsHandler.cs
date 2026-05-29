@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FoodsHandler : MonoBehaviour
 {
@@ -12,15 +13,24 @@ public class FoodsHandler : MonoBehaviour
     [SerializeField] private GameObject warningTxt;
     [SerializeField] private GameObject emptyTxt;
     [SerializeField] private GameObject explosionFx;
+    [Header("Sounds")]
+    [SerializeField] private AudioSource create;
+    [SerializeField] private AudioSource delete;
+    [Header("Dishes")]
+    [SerializeField] private GameObject[] dishes;
 
     private bool isChoosing;
     private bool isCooking;
+    //private OrderInfo info;
+    private int ingredientQuant;
 
     private void Start()
     {
         isChoosing = false;
         isCooking = false;
-         cookBttn.onClick.AddListener(() => Cook());
+        cookBttn.onClick.AddListener(() => Cook());
+        Time.timeScale = 1;
+        //info = GameObject.Find("OrderInfo(Clone)").GetComponent<OrderInfo>();
     }
 
     public void ChooseFood(int food)
@@ -35,12 +45,14 @@ public class FoodsHandler : MonoBehaviour
 
         GameObject prefab = ChoosePrefab(food);
 
+        create.Play();
+
         for (int i = 0; i < positions.Length; i++)
         { 
             if (positions[i].childCount == 0)
             {
                 instance = Instantiate(prefab, positions[i]);
-                instance.GetComponent<RectTransform>().sizeDelta *= 1.2f;
+                instance.GetComponent<RectTransform>().localScale *= 0.8f;
                 StartCoroutine(ResetChoosing());
                 return;
             }
@@ -52,11 +64,11 @@ public class FoodsHandler : MonoBehaviour
         isChoosing = false;
     }
 
-    private void Cook() 
+    public void Cook() 
     {
-        int ingredientQuant = 0;
+        ingredientQuant = 0;
 
-        for(int i = 0; i < prefabs.Length; i++) 
+        for(int i = 0; i < positions.Length; i++) 
         {
             if (positions[i].childCount != 0)
                 ingredientQuant++;
@@ -80,6 +92,7 @@ public class FoodsHandler : MonoBehaviour
 
     private IEnumerator MoveIngredients()
     {
+        Debug.Log("a");
         isCooking = true;
         Transform[] ingredients = new Transform[5];
         int index = 0;
@@ -137,6 +150,10 @@ public class FoodsHandler : MonoBehaviour
             Destroy(explosion, 1f);
         }
 
+        int randomDish = Random.Range(0,9);
+
+        dishes[randomDish].SetActive(true);
+
         for (int i = 0; i < ingredients.Length; i++)
         {
             if (ingredients[i] != null)
@@ -152,7 +169,14 @@ public class FoodsHandler : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        yield return new WaitForSeconds(1.5f);
+
         isCooking = false;
+
+        //if(info != null)
+        //    Destroy(info.gameObject);
+
+        SceneManager.LoadScene(1);
     }
 
     private IEnumerator ShowWarning() 
@@ -173,5 +197,12 @@ public class FoodsHandler : MonoBehaviour
     {
         yield return null;
         isChoosing = false;
+    }
+
+    public void DestroyIngredient(GameObject target) 
+    {
+        ingredientQuant--;
+        delete.Play();
+        Destroy(target);
     }
 }

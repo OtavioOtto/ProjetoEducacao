@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class OrdersHandler : MonoBehaviour
 {
-    private string[] allIngredients = { "TOMATE", "CARNE", "CEBOLA", "BANANA", "QUEIJO" };
+    private string[] allIngredients = { "ALFACE", "ARROZ", "BATATA", "BATATA_DOCE", "BERINJELA", "BROCOLIS", "CARNE", "CENOURA", "FEIJAO"};
     private string[] selectedIngredients = new string[5];
 
     public string[] ReturnIngredients()

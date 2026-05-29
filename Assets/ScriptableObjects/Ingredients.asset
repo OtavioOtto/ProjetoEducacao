@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b845c179ccfb0438b245d55912a888, type: 3}
+  m_Name: Ingredients
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientMapping
+  ingredientPrefabs:
+  - ingredientName: ALFACE
+    prefab: {fileID: 8954883548758721650, guid: c93a38bc1f44bb348a731d18fffd7211, type: 3}
+  - ingredientName: ARROZ
+    prefab: {fileID: 2969993727603021317, guid: 609c3cb918e1ff04abd82907ff0d3df2, type: 3}
+  - ingredientName: BATATA
+    prefab: {fileID: 6867287283353887968, guid: 89feabffb912ace4187c5289c80ca462, type: 3}
+  - ingredientName: BATATA_DOCE
+    prefab: {fileID: 1258194792243709580, guid: e89198ae535e9164d95e37744228f3ae, type: 3}
+  - ingredientName: BERINJELA
+    prefab: {fileID: 7076052080045261437, guid: d045fabb09ffc0449bc677490967ca62, type: 3}
+  - ingredientName: BROCOLIS
+    prefab: {fileID: 1007990467046183929, guid: 8a6e63db1158f7e4db26e2d400d12c3d, type: 3}
+  - ingredientName: CARNE
+    prefab: {fileID: 8207913661137011996, guid: cb638f905f9dd00468dddd400d5235f4, type: 3}
+  - ingredientName: CENOURA
+    prefab: {fileID: 6416531894666925067, guid: 6a32c07389e5cd94a84e6e9f4da0f6b9, type: 3}
+  - ingredientName: FEIJAO
+    prefab: {fileID: 1848048578369642624, guid: a79bbada8132ec24db3c741358d869d3, type: 3}

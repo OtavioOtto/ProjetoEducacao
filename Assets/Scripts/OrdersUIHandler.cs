@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerClickHandler, IBeginDragHandler
 {
@@ -8,6 +9,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     [SerializeField] private float targetYPosition = 0f;
     [SerializeField] private float dragThreshold = 10f;
     [SerializeField] private GameObject cookBttn;
+    [SerializeField] private Image shadow;
 
     private RectTransform rectTransform;
     private bool draggable = true;
@@ -34,6 +36,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     {
         canvas = GameObject.Find("GameplayCanvas").GetComponent<Canvas>();
         spawn = GameObject.Find("OrdersSpawn").GetComponent<Transform>();
+        
     }
 
     private void FixedUpdate()
@@ -113,6 +116,8 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if(shadow == null)
+            shadow = GameObject.Find("Shadow").GetComponent<Image>();
 
         // Don't process click if it was a drag
         if (isDragging)
@@ -124,6 +129,8 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
         if (gameObject.transform.parent.name.Equals("OrdersSpawn"))
         {
             // Move to center for cooking
+            Time.timeScale = 0f;
+            shadow.enabled = true;
             gameObject.transform.SetParent(canvas.gameObject.transform);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
             Vector3 localPos = rectTransform.localPosition;
@@ -137,6 +144,8 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
         else
         {
             // Return to spawn area
+            Time.timeScale = 1f;
+            shadow.enabled = false;
             gameObject.transform.SetParent(spawn);
             cookBttn.SetActive(false);
             rectTransform.pivot = new Vector2(0.5f, 1f);

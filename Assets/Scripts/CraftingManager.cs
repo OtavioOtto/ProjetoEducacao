@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
 public class CraftingManager : MonoBehaviour
 {
     [SerializeField] private List<Recipe> allRecipes;
@@ -27,9 +26,30 @@ public class CraftingManager : MonoBehaviour
         return null;
     }
 
+    public string GetRecipeName(List<Ingredients> selectedIngredients)
+    {
+        if (selectedIngredients.Count > 5)
+        {
+            Debug.Log("Too many ingredients! Max 5.");
+            return null;
+        }
+
+        foreach (Recipe recipe in allRecipes)
+        {
+            if (MatchesRecipe(selectedIngredients, recipe.requiredIngredients))
+            {
+                return recipe.recipeName;
+            }
+        }
+
+        Debug.Log("No matching recipe found!");
+        return null;
+    }
+
     private bool MatchesRecipe(List<Ingredients> playerIngredients, List<Ingredients> recipeIngredients)
     {
         if (playerIngredients.Count != recipeIngredients.Count)
+
             return false;
 
         var sortedPlayer = playerIngredients.OrderBy(i => i).ToList();
@@ -40,11 +60,11 @@ public class CraftingManager : MonoBehaviour
             if (sortedPlayer[i] != sortedRecipe[i])
                 return false;
         }
-
         return true;
     }
 
     public List<Recipe> GetAllRecipes()
+
     {
         return allRecipes;
     }

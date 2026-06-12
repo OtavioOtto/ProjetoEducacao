@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5005204793415675631}
   - component: {fileID: 1987261387732681634}
   - component: {fileID: 8526135488332745726}
+  - component: {fileID: -8763064043647839877}
   m_Layer: 5
   m_Name: CarneAlfaceBrocolis
   m_TagString: Untagged
@@ -75,3 +76,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-8763064043647839877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983952419943303163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf7112f4435e084db41dec6df7a06cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TypeFood
+  type: 0

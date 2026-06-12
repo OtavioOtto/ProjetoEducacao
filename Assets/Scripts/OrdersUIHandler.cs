@@ -10,6 +10,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     [SerializeField] private float dragThreshold = 10f;
     [SerializeField] private GameObject cookBttn;
     [SerializeField] private Image shadow;
+    public string recipeName;
 
     private RectTransform rectTransform;
     private bool draggable = true;

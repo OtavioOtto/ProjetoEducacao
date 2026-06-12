@@ -2,20 +2,34 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public struct OrderData
+{
+    public List<Ingredients> ingredients;
+    public string recipeName;
+
+    public OrderData(List<Ingredients> ingredients, string recipeName)
+    {
+        this.ingredients = ingredients;
+        this.recipeName = recipeName;
+    }
+}
+
+
 public class OrdersHandler : MonoBehaviour
 {
     [SerializeField] private CraftingManager craftingManager;
     [SerializeField] private int minIngredients = 3;
     [SerializeField] private int maxIngredients = 5;
+    private string currentRecipeName;
 
     private List<Ingredients> currentOrder = new List<Ingredients>();
 
-    public List<Ingredients> ReturnOrder()
+    public OrderData ReturnOrder()
     {
         if (craftingManager == null)
         {
             Debug.LogError("CraftingManager not assigned!");
-            return null;
+            return new OrderData(null, null);
         }
 
         // Get all available recipes
@@ -24,7 +38,7 @@ public class OrdersHandler : MonoBehaviour
         if (availableRecipes == null || availableRecipes.Count == 0)
         {
             Debug.LogError("No recipes available!");
-            return null;
+            return new OrderData(null, null);
         }
 
         // Filter recipes by ingredient count (only include recipes within min/max range)
@@ -45,6 +59,7 @@ public class OrdersHandler : MonoBehaviour
 
         // ORDER THE COMPLETE RECIPE (not just a subset)
         currentOrder = new List<Ingredients>(selectedRecipe.requiredIngredients);
+        currentRecipeName = selectedRecipe.recipeName;
 
         Debug.Log($"Order created: {selectedRecipe.recipeName} with {currentOrder.Count} ingredients");
 
@@ -52,6 +67,6 @@ public class OrdersHandler : MonoBehaviour
         string ingredientsList = string.Join(", ", currentOrder);
         Debug.Log($"Ingredients: {ingredientsList}");
 
-        return currentOrder;
+        return new OrderData(currentOrder, currentRecipeName);
     }
 }

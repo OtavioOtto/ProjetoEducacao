@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2464098099150086204}
   - component: {fileID: 6856065180877089940}
   - component: {fileID: 5510941606157863426}
+  - component: {fileID: 2853358719010209062}
   m_Layer: 5
   m_Name: ArrozPeixe
   m_TagString: Untagged
@@ -75,3 +76,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2853358719010209062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5682517376324450894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf7112f4435e084db41dec6df7a06cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TypeFood
+  type: 0

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 968093134574750556}
   - component: {fileID: 643421998066665806}
   - component: {fileID: 300588282122863809}
+  - component: {fileID: -8606385336250415632}
   m_Layer: 5
   m_Name: MacarraoBrocolis
   m_TagString: Untagged
@@ -75,3 +76,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-8606385336250415632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5182956166842682787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf7112f4435e084db41dec6df7a06cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TypeFood
+  type: 1

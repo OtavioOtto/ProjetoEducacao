@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2370717761955241029}
   - component: {fileID: 1325034361271100972}
   - component: {fileID: 2408463460499938205}
+  - component: {fileID: -4402982451314612164}
   m_Layer: 5
   m_Name: ArrozAlfaceOmelete
   m_TagString: Untagged
@@ -75,3 +76,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-4402982451314612164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4630924270498191515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf7112f4435e084db41dec6df7a06cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TypeFood
+  type: 0

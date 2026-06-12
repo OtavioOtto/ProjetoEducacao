@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Video;
+using TMPro;
 
 public class GoToShop : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GoToShop : MonoBehaviour
     [SerializeField] private GameObject clientsParent;
     [SerializeField] private GameObject ordersParent;
     [SerializeField] private GameObject message;
+    [SerializeField] private TMP_Text value;
     [Header("Transitions")]
     [SerializeField] private RawImage transition;
     [SerializeField] private RawImage transition2;
@@ -34,6 +36,7 @@ public class GoToShop : MonoBehaviour
         {
             clients.SetActive(false);
             final.enabled = true;
+            value.text = "" + handler.GetMoney();
         }
 
         else if(slider.value == 0f && day != 3 && !playing) 

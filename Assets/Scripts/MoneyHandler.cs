@@ -27,6 +27,6 @@ public class MoneyHandler : MonoBehaviour
 
     public void ChangeDay()
     {
-        globalMoney += 1;
+        currentDay += 1;
     }
 }

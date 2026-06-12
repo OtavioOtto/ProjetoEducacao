@@ -21,7 +21,7 @@ MonoBehaviour:
     prefab: {fileID: 3132506422873046766, guid: fd5097e381860934b89c8b592f34bb06, type: 3}
   - ingredientName: BATATA
     prefab: {fileID: 6867287283353887968, guid: 89feabffb912ace4187c5289c80ca462, type: 3}
-  - ingredientName: BATATA_DOCE
+  - ingredientName: BATATADOCE
     prefab: {fileID: 1258194792243709580, guid: e89198ae535e9164d95e37744228f3ae, type: 3}
   - ingredientName: BERINJELA
     prefab: {fileID: 7076052080045261437, guid: d045fabb09ffc0449bc677490967ca62, type: 3}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8382868963822558319}
   - component: {fileID: 5428219094980467230}
   - component: {fileID: 2032265486519799932}
+  - component: {fileID: -6662155895914283781}
   m_Layer: 5
   m_Name: ArrozAlfacePeixeOvo
   m_TagString: Untagged
@@ -75,3 +76,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-6662155895914283781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5044553806204188187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf7112f4435e084db41dec6df7a06cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TypeFood
+  type: 0

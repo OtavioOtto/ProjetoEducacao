@@ -17,6 +17,7 @@ public class ClientSpawnHandler : MonoBehaviour
     [SerializeField] private Transform finalPosition;
     [Header("Scripts")]
     [SerializeField] private OrdersHandler handler;
+    [SerializeField] private MoneyHandler money;
     [Header("Mapping")]
     [SerializeField] private IngredientMapping ingredientMapping;
     [Header("SFX")]
@@ -31,21 +32,29 @@ public class ClientSpawnHandler : MonoBehaviour
         StartSpawningForCurrentDay();
     }
 
+    private void FixedUpdate()
+    {
+        if(currentDay != money.GetDay()) 
+        {
+            currentDay = money.GetDay();
+        }
+    }
+
     void StartSpawningForCurrentDay()
     {
         if (isSpawning) return;
 
         if (currentDay == 1)
         {
-            InvokeRepeating(nameof(SpawnClientDay1), 2f, 10f);
+            InvokeRepeating(nameof(SpawnClientDay1), 2f, 14f);
         }
         else if (currentDay == 2)
         {
-            InvokeRepeating(nameof(SpawnClientDay2), 0f, 20f);
+            InvokeRepeating(nameof(SpawnClientDay2), 0f, 12f);
         }
         else if (currentDay == 3)
         {
-            InvokeRepeating(nameof(SpawnClientDay3), 0f, 15f);
+            InvokeRepeating(nameof(SpawnClientDay3), 0f, 10f);
         }
         else
         {
@@ -116,8 +125,18 @@ public class ClientSpawnHandler : MonoBehaviour
         client.transform.position = endPos;
 
         GameObject newOrder = Instantiate(order, orderPos.position, Quaternion.identity, orderPos);
-        List<Ingredients> ingredients = handler.ReturnOrder();
-        Transform imagesParent = newOrder.transform.GetChild(1);
+        var orderResult = handler.ReturnOrder();
+        List<Ingredients> ingredients = orderResult.ingredients;
+        string recipeName = orderResult.recipeName;
+
+        OrdersUIHandler orderUI = newOrder.GetComponent<OrdersUIHandler>();
+
+        if (orderUI != null)
+        {
+            orderUI.recipeName = recipeName;
+        }
+
+        Transform imagesParent = newOrder.transform.GetChild(1); 
 
         for (int i = 0; i < ingredients.Count; i++)
         {

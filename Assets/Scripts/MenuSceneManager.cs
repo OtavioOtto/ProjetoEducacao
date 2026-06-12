@@ -49,7 +49,7 @@ public class MenuSceneManager : MonoBehaviour
             Destroy(musicManager);
             musicManager = null;
         }
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(5);
     }
 
     public void GoToTutorial()

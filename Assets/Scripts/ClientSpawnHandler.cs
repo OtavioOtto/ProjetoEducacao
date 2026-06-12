@@ -1,6 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class ClientSpawnHandler : MonoBehaviour
@@ -15,7 +15,7 @@ public class ClientSpawnHandler : MonoBehaviour
     [SerializeField] private Transform orderPos;
     [SerializeField] private Transform spawnPosition;
     [SerializeField] private Transform finalPosition;
-    [Header("Scrtips")]
+    [Header("Scripts")]
     [SerializeField] private OrdersHandler handler;
     [Header("Mapping")]
     [SerializeField] private IngredientMapping ingredientMapping;
@@ -23,27 +23,29 @@ public class ClientSpawnHandler : MonoBehaviour
     [SerializeField] private AudioSource soundEffect;
 
     private bool isSpawning = false;
+    private bool firstTime;
 
-    void Start() 
+    void Start()
     {
+        firstTime = true;
         StartSpawningForCurrentDay();
     }
 
     void StartSpawningForCurrentDay()
     {
-        if (isSpawning) return; 
+        if (isSpawning) return;
 
         if (currentDay == 1)
         {
-            InvokeRepeating(nameof(SpawnClientDay1), 0f, 10f); 
+            InvokeRepeating(nameof(SpawnClientDay1), 2f, 10f);
         }
         else if (currentDay == 2)
         {
-            InvokeRepeating(nameof(SpawnClientDay2), 5f, 20f);
+            InvokeRepeating(nameof(SpawnClientDay2), 0f, 20f);
         }
         else if (currentDay == 3)
         {
-            InvokeRepeating(nameof(SpawnClientDay3), 3f, 15f);
+            InvokeRepeating(nameof(SpawnClientDay3), 0f, 15f);
         }
         else
         {
@@ -79,15 +81,15 @@ public class ClientSpawnHandler : MonoBehaviour
             return;
         }
 
-        if (spawn <= 5)
+        if (spawn <= 5 || (chanceOfSpawn == 1 && firstTime))
         {
+            firstTime = false;
             int which = Random.Range(0, clients.Length);
             StartCoroutine(SpawnNPCAndOrder(which));
-            
         }
     }
 
-    private IEnumerator SpawnNPCAndOrder(int which) 
+    private IEnumerator SpawnNPCAndOrder(int which)
     {
         soundEffect.Play();
         GameObject client = Instantiate(clients[which], spawnPosition.position, Quaternion.identity, spawnPosition);
@@ -99,7 +101,6 @@ public class ClientSpawnHandler : MonoBehaviour
 
         Vector3 startPos = client.transform.position;
         Vector3 endPos = finalPosition.position;
-        
 
         while (elapsedTime < moveDuration)
         {
@@ -115,14 +116,15 @@ public class ClientSpawnHandler : MonoBehaviour
         client.transform.position = endPos;
 
         GameObject newOrder = Instantiate(order, orderPos.position, Quaternion.identity, orderPos);
-        string[] ingredients = handler.ReturnIngredients();
+        List<Ingredients> ingredients = handler.ReturnOrder();
         Transform imagesParent = newOrder.transform.GetChild(1);
-        for(int i = 0; i < ingredients.Length; i++) 
+
+        for (int i = 0; i < ingredients.Count; i++)
         {
-            GameObject ingredientPrefab = ingredientMapping.GetPrefab(ingredients[i]);
+            GameObject ingredientPrefab = ingredientMapping.GetPrefab(ingredients[i].ToString());
             if (ingredientPrefab != null)
             {
-                for(int j = 0; j < imagesParent.childCount; j++) 
+                for (int j = 0; j < imagesParent.childCount; j++)
                 {
                     if (imagesParent.GetChild(j).childCount == 0)
                     {
@@ -130,18 +132,15 @@ public class ClientSpawnHandler : MonoBehaviour
                         instance.GetComponent<RectTransform>().sizeDelta /= 1.2f;
                         break;
                     }
-                    
                 }
-                
             }
         }
-        
 
         isSpawning = false;
         StartCoroutine(DestroyNPC(client));
     }
 
-    private IEnumerator DestroyNPC(GameObject target) 
+    private IEnumerator DestroyNPC(GameObject target)
     {
         yield return new WaitForSeconds(7.0f);
 
@@ -164,7 +163,7 @@ public class ClientSpawnHandler : MonoBehaviour
         Destroy(target);
     }
 
-    private string ChooseText() 
+    private string ChooseText()
     {
         string text = "";
         int random = Random.Range(1, 4);

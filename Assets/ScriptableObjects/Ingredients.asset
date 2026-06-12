@@ -17,6 +17,8 @@ MonoBehaviour:
     prefab: {fileID: 8954883548758721650, guid: c93a38bc1f44bb348a731d18fffd7211, type: 3}
   - ingredientName: ARROZ
     prefab: {fileID: 2969993727603021317, guid: 609c3cb918e1ff04abd82907ff0d3df2, type: 3}
+  - ingredientName: ATUM
+    prefab: {fileID: 3132506422873046766, guid: fd5097e381860934b89c8b592f34bb06, type: 3}
   - ingredientName: BATATA
     prefab: {fileID: 6867287283353887968, guid: 89feabffb912ace4187c5289c80ca462, type: 3}
   - ingredientName: BATATA_DOCE
@@ -31,3 +33,31 @@ MonoBehaviour:
     prefab: {fileID: 6416531894666925067, guid: 6a32c07389e5cd94a84e6e9f4da0f6b9, type: 3}
   - ingredientName: FEIJAO
     prefab: {fileID: 1848048578369642624, guid: a79bbada8132ec24db3c741358d869d3, type: 3}
+  - ingredientName: FRANGO
+    prefab: {fileID: 8193426834154602702, guid: 935c3c5d73a6ff04ab697ff96c1be94b, type: 3}
+  - ingredientName: IOGURTE
+    prefab: {fileID: 3021665746313558963, guid: 31b1d2c8a9117e040bf8ef37d172c0e0, type: 3}
+  - ingredientName: LEITE
+    prefab: {fileID: 3428861641868309652, guid: ebe1b17b4412f2c4aaeab59c69ed14c8, type: 3}
+  - ingredientName: MASSA
+    prefab: {fileID: 3301489285464772468, guid: ab283df5e786e0b46b27c76c93356622, type: 3}
+  - ingredientName: MOLHODETOMATE
+    prefab: {fileID: 1794516356769096499, guid: 3039aae52a94d764b91e437b0912412a, type: 3}
+  - ingredientName: OVO
+    prefab: {fileID: 1576323691107163140, guid: f66e07ed439d2964690d774ac3c4100f, type: 3}
+  - ingredientName: PAO
+    prefab: {fileID: 679223226906412964, guid: 4c47cf82a5d62b7479585af00366a009, type: 3}
+  - ingredientName: PEIXE
+    prefab: {fileID: 4790399191557081085, guid: 1eadb7b99b55f6b4db0c71d5377d2342, type: 3}
+  - ingredientName: PIMENTAO
+    prefab: {fileID: 2461953792196158906, guid: bf716945eb8fbe5409538a10c8e26022, type: 3}
+  - ingredientName: QUEIJO
+    prefab: {fileID: 6166093745545085965, guid: cc7c9fbd355add847ab285cc0b2ecfea, type: 3}
+  - ingredientName: REFRIGERANTE
+    prefab: {fileID: 357976939008923315, guid: 98c017e4f02a42047bce1816cce59873, type: 3}
+  - ingredientName: SALSICHA
+    prefab: {fileID: 9146552654234683508, guid: 5272f605cbfc23a4988515b9b34c1561, type: 3}
+  - ingredientName: SUCOARTIFICIAL
+    prefab: {fileID: 401180212639425223, guid: 46c75dea78fa064459f22ea39b3b2bed, type: 3}
+  - ingredientName: TOMATE
+    prefab: {fileID: 247705363775628684, guid: c8aa62966b9d5e34f8f7eb53f826ba37, type: 3}

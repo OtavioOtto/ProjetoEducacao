@@ -28,6 +28,7 @@ public class IngredientMapping : ScriptableObject
 
     public GameObject GetPrefab(string ingredientName)
     {
+        ingredientName = ingredientName.ToUpper();
         if (prefabDictionary == null) Initialize();
 
         if (prefabDictionary.TryGetValue(ingredientName, out GameObject prefab))

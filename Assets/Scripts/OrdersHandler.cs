@@ -1,37 +1,57 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class OrdersHandler : MonoBehaviour
 {
-    private string[] allIngredients = { "ALFACE", "ARROZ", "BATATA", "BATATA_DOCE", "BERINJELA", "BROCOLIS", "CARNE", "CENOURA", "FEIJAO"};
-    private string[] selectedIngredients = new string[5];
+    [SerializeField] private CraftingManager craftingManager;
+    [SerializeField] private int minIngredients = 3;
+    [SerializeField] private int maxIngredients = 5;
 
-    public string[] ReturnIngredients()
+    private List<Ingredients> currentOrder = new List<Ingredients>();
+
+    public List<Ingredients> ReturnOrder()
     {
-        if (allIngredients == null || allIngredients.Length == 0)
+        if (craftingManager == null)
         {
-            Debug.LogError("A lista de palavras está vazia!");
+            Debug.LogError("CraftingManager not assigned!");
             return null;
         }
 
-        int maxSelectable = Mathf.Min(5, allIngredients.Length);
-        int wordCount = Random.Range(3, maxSelectable + 1);
+        // Get all available recipes
+        List<Recipe> availableRecipes = craftingManager.GetAllRecipes();
 
-        string[] randomIngredients = (string[])allIngredients.Clone();
-
-        for (int i = 0; i < randomIngredients.Length; i++)
+        if (availableRecipes == null || availableRecipes.Count == 0)
         {
-            string temp = randomIngredients[i];
-            int randomIndex = Random.Range(i, randomIngredients.Length);
-            randomIngredients[i] = randomIngredients[randomIndex];
-            randomIngredients[randomIndex] = temp;
+            Debug.LogError("No recipes available!");
+            return null;
         }
 
-        selectedIngredients = new string[wordCount];
-        for (int i = 0; i < wordCount; i++)
+        // Filter recipes by ingredient count (only include recipes within min/max range)
+        List<Recipe> validRecipes = availableRecipes
+            .Where(recipe => recipe.requiredIngredients.Count >= minIngredients
+                          && recipe.requiredIngredients.Count <= maxIngredients)
+            .ToList();
+
+        // If no recipes match the range, fall back to all recipes
+        if (validRecipes.Count == 0)
         {
-            selectedIngredients[i] = randomIngredients[i];
+            Debug.LogWarning($"No recipes found with {minIngredients}-{maxIngredients} ingredients. Using all recipes.");
+            validRecipes = availableRecipes;
         }
 
-        return selectedIngredients;
+        // Select a random recipe
+        Recipe selectedRecipe = validRecipes[Random.Range(0, validRecipes.Count)];
+
+        // ORDER THE COMPLETE RECIPE (not just a subset)
+        currentOrder = new List<Ingredients>(selectedRecipe.requiredIngredients);
+
+        Debug.Log($"Order created: {selectedRecipe.recipeName} with {currentOrder.Count} ingredients");
+
+        // Optional: Log the ingredients for debugging
+        string ingredientsList = string.Join(", ", currentOrder);
+        Debug.Log($"Ingredients: {ingredientsList}");
+
+        return currentOrder;
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5745765315313466695}
   - component: {fileID: 3704883568210252079}
   - component: {fileID: 9095196434476008626}
+  - component: {fileID: -8817200029531973452}
   m_Layer: 5
   m_Name: ARROZ
   m_TagString: Untagged
@@ -75,3 +76,17 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-8817200029531973452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2969993727603021317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1efa160f4c34240930e6f37f2edcaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientIdentifier
+  ingredientType: 6
+  ingredientPrefab: {fileID: 2969993727603021317}

@@ -5,57 +5,33 @@ using UnityEngine.UI;
 public class ClientSceneChanger : MonoBehaviour
 {
     [SerializeField] private GameObject prefabOrder;
-    [SerializeField] private TimeLimitSlider timer;
-    [SerializeField] private Slider timerSlider;
-    [Header("Ingredients")]
-    [SerializeField] private GameObject food1;
-    [SerializeField] private GameObject food2;
-    [SerializeField] private GameObject food3;
-    [SerializeField] private GameObject food4;
-    [SerializeField] private GameObject food5;
-    OrderInfo info;
+    [SerializeField] private Canvas cookingCanvas;
+    [SerializeField] private Canvas clientsCanvas;
+    [SerializeField] private Transform orderPos;
+    [SerializeField] private Slider orderSlider;
+    [SerializeField] private Slider cookingSlider;
+
     public void GoCook() 
     {
-        int sizeList = 0;
-        if (food1.transform.childCount != 0)
-            sizeList++;
+        orderPos = GameObject.FindGameObjectWithTag("OrderPos").GetComponent<Transform>();
+        cookingSlider = GameObject.FindGameObjectWithTag("CookSlider").GetComponent<Slider>();
+        cookingCanvas = GameObject.FindGameObjectWithTag("CookCanvas").GetComponent<Canvas>();
+        clientsCanvas = GameObject.Find("GameplayCanvas").GetComponent<Canvas>();
 
-        if (food2.transform.childCount != 0)
-            sizeList++;
+        Time.timeScale = 1f;
+        cookingCanvas.enabled = true;
+        clientsCanvas.enabled = false;
 
-        if (food3.transform.childCount != 0)
-            sizeList++;
+        prefabOrder.transform.SetParent(orderPos, false);
+        prefabOrder.transform.localScale = new Vector3(1f, 1f, 1f);
+        prefabOrder.GetComponent<OrdersUIHandler>().enabled = false;
+        prefabOrder.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
-        if (food4.transform.childCount != 0)
-            sizeList++;
+        cookingSlider.value = orderSlider.value;
+        cookingSlider.GetComponent<TimeLimitSlider>().maxTime = orderSlider.GetComponent<TimeLimitSlider>().maxTime;
+        cookingSlider.GetComponent<TimeLimitSlider>().currentTime = orderSlider.GetComponent<TimeLimitSlider>().currentTime;
 
-        if (food5.transform.childCount != 0)
-            sizeList++;
-
-        string[] ingredients = new string[sizeList];
-
-        if (food1.transform.childCount != 0)
-            ingredients[0] = food1.transform.GetChild(0).name;
-
-        if (food2.transform.childCount != 0)
-            ingredients[1] = food2.transform.GetChild(0).name;
-
-        if (food3.transform.childCount != 0)
-            ingredients[2] = food3.transform.GetChild(0).name;
-
-        if (food4.transform.childCount != 0)
-            ingredients[3] = food4.transform.GetChild(0).name;
-
-        if (food5.transform.childCount != 0)
-            ingredients[4] = food5.transform.GetChild(0).name;
-
-        GameObject orderInfo = Instantiate(prefabOrder);
-        DontDestroyOnLoad(orderInfo);
-        info = orderInfo.GetComponent<OrderInfo>();
-        info.SetTime(timer.maxTime, timerSlider.value);
-        info.SetDish("");
-        info.SetClient(0);
-        info.SetIngridients(ingredients);
-        SceneManager.LoadScene(2);
+        orderSlider.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

@@ -1,119 +1,137 @@
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class FoodsHandler : MonoBehaviour
 {
     [SerializeField] private Button cookBttn;
-    [SerializeField] private Transform [] positions = new Transform[5];
+    [SerializeField] private Transform[] positions = new Transform[5];
     [SerializeField] private Transform position;
+    [SerializeField] private GameObject orderPos;
+    [SerializeField] private Slider timer;
     [Header("GameObjects")]
-    [SerializeField] private GameObject [] prefabs;
+    [SerializeField] private GameObject[] prefabs;
     [SerializeField] private GameObject warningTxt;
     [SerializeField] private GameObject emptyTxt;
     [SerializeField] private GameObject explosionFx;
     [Header("Sounds")]
     [SerializeField] private AudioSource create;
-    [SerializeField] private AudioSource delete;
-    [Header("Dishes")]
-    [SerializeField] private GameObject[] dishes;
+    [SerializeField] private AudioSource delete; 
+    [Header("Crafting System")]
+    [SerializeField] private CraftingManager craftingManager;
+    [Header("Canvas")]
+    [SerializeField] private Canvas clients;
+    [SerializeField] private Canvas cooking;
+    [Header("Reaction")]
+    [SerializeField] private Image correct;
+    [SerializeField] private Image incorrect;
+    [SerializeField] private Image money;
+    [SerializeField] private TMP_Text amount;
 
+    // Simple list to track current ingredients
+    private List<Ingredients> currentIngredients = new List<Ingredients>();
     private bool isChoosing;
     private bool isCooking;
-    //private OrderInfo info;
-    private int ingredientQuant;
 
     private void Start()
     {
         isChoosing = false;
         isCooking = false;
         cookBttn.onClick.AddListener(() => Cook());
-        Time.timeScale = 1;
-        //info = GameObject.Find("OrderInfo(Clone)").GetComponent<OrderInfo>();
+
+        if (craftingManager == null)
+            craftingManager = FindFirstObjectByType<CraftingManager>();
     }
 
-    public void ChooseFood(int food)
+    private void Update()
+    {
+        if(timer.value == 0f) 
+        {
+            isCooking = false;
+            currentIngredients.Clear();
+            money.enabled = false;
+            correct.enabled = false;
+            incorrect.enabled = false;
+            amount.enabled = false;
+            clients.enabled = true;
+            cooking.enabled = false;
+            Destroy(orderPos.transform.GetChild(0));
+        }
+    }
+
+
+    public void ChooseFood(IngredientIdentifier ingredientData)
     {
         if (prefabs == null) return;
-
         if (isChoosing) return;
         if (isCooking) return;
+
+        // Check if we already have 5 ingredients
+        if (currentIngredients.Count >= 5)
+        {
+            StartCoroutine(ShowWarning());
+            return;
+        }
+
         isChoosing = true;
 
-        GameObject instance = null;
-
-        GameObject prefab = ChoosePrefab(food);
-
+        // Get the prefab associated with this ingredient
+        GameObject prefab = ingredientData.ingredientPrefab;
         create.Play();
 
         for (int i = 0; i < positions.Length; i++)
-        { 
+        {
             if (positions[i].childCount == 0)
             {
-                instance = Instantiate(prefab, positions[i]);
+                GameObject instance = Instantiate(prefab, positions[i]);
                 instance.GetComponent<RectTransform>().localScale *= 0.8f;
+
+                // Add identifier to the instantiated object (for destruction tracking)
+                IngredientIdentifier identifier = instance.AddComponent<IngredientIdentifier>();
+                identifier.ingredientType = ingredientData.ingredientType;
+
+                currentIngredients.Add(ingredientData.ingredientType);
+
                 StartCoroutine(ResetChoosing());
                 return;
             }
         }
-        if(instance == null)
-        {
-            StartCoroutine(ShowWarning());
-        }
+
         isChoosing = false;
     }
 
-    public void Cook() 
+    public void Cook()
     {
-        ingredientQuant = 0;
-
-        for(int i = 0; i < positions.Length; i++) 
-        {
-            if (positions[i].childCount != 0)
-                ingredientQuant++;
-        }
-
-        if (ingredientQuant == 0)
+        if (currentIngredients.Count == 0)
         {
             StartCoroutine(ShowEmpty());
             return;
         }
 
         StartCoroutine(MoveIngredients());
-
-
-    }
-
-    private GameObject ChoosePrefab(int food) 
-    {
-        return prefabs[food];
     }
 
     private IEnumerator MoveIngredients()
     {
-        Debug.Log("a");
         isCooking = true;
-        Transform[] ingredients = new Transform[5];
-        int index = 0;
+
+        // Get all ingredient GameObjects to move
+        List<Transform> ingredientsToMove = new List<Transform>();
 
         for (int i = 0; i < positions.Length; i++)
         {
             if (positions[i].childCount > 0)
             {
-                ingredients[index] = positions[i].GetChild(0);
-                index++;
+                ingredientsToMove.Add(positions[i].GetChild(0));
             }
         }
 
-        Vector3[] startPositions = new Vector3[5];
-
-        for (int i = 0; i < ingredients.Length; i++)
+        Vector3[] startPositions = new Vector3[ingredientsToMove.Count];
+        for (int i = 0; i < ingredientsToMove.Count; i++)
         {
-            if (ingredients[i] != null)
-            {
-                startPositions[i] = ingredients[i].position;
-            }
+            startPositions[i] = ingredientsToMove[i].position;
         }
 
         float duration = 0.5f;
@@ -124,23 +142,22 @@ public class FoodsHandler : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / duration;
 
-            for (int i = 0; i < ingredients.Length; i++)
+            for (int i = 0; i < ingredientsToMove.Count; i++)
             {
-                if (ingredients[i] != null)
+                if (ingredientsToMove[i] != null)
                 {
-                    ingredients[i].position = Vector3.Lerp(startPositions[i], position.position, t);
+                    ingredientsToMove[i].position = Vector3.Lerp(startPositions[i], position.position, t);
                 }
             }
-
             yield return null;
         }
 
-        for (int i = 0; i < ingredients.Length; i++)
+        for (int i = 0; i < ingredientsToMove.Count; i++)
         {
-            if (ingredients[i] != null)
+            if (ingredientsToMove[i] != null)
             {
-                ingredients[i].position = position.position;
-                ingredients[i].SetParent(position);
+                ingredientsToMove[i].position = position.position;
+                ingredientsToMove[i].SetParent(position);
             }
         }
 
@@ -150,42 +167,93 @@ public class FoodsHandler : MonoBehaviour
             Destroy(explosion, 1f);
         }
 
-        int randomDish = Random.Range(0,9);
+        // CHECK RECIPE USING THE CRAFTING MANAGER
+        GameObject craftedResult = null;
 
-        dishes[randomDish].SetActive(true);
-
-        for (int i = 0; i < ingredients.Length; i++)
+        if (craftingManager != null)
         {
-            if (ingredients[i] != null)
-            {
-                Destroy(ingredients[i].gameObject);
-            }
+            craftedResult = craftingManager.CraftItem(currentIngredients);
+        }
+        else
+        {
+            Debug.LogError("CraftingManager not assigned!");
         }
 
-        for (int i = 0; i < positions.Length; i++)
+        // Delete all ingredients
+        foreach (Transform ingredient in ingredientsToMove)
         {
-            foreach (Transform child in positions[i])
-            {
-                Destroy(child.gameObject);
-            }
+            if (ingredient != null)
+                Destroy(ingredient.gameObject);
         }
-        yield return new WaitForSeconds(1.5f);
 
-        isCooking = false;
+        // Handle the result
+        if (craftedResult != null)
+        {
 
-        //if(info != null)
-        //    Destroy(info.gameObject);
+            GameObject finalDish = Instantiate(craftedResult, position);
 
-        SceneManager.LoadScene(1);
+            isCooking = false;
+            currentIngredients.Clear();
+
+            amount.SetText("+ Pontos");
+            amount.color = Color.green;
+            correct.enabled = true;
+            money.enabled = true;
+            amount.enabled = true;
+
+            yield return new WaitForSeconds(3f);
+
+            money.enabled = false;
+            correct.enabled = false;
+            incorrect.enabled = false;
+            amount.enabled = false;
+            clients.enabled = true;
+            cooking.enabled = false;
+            Destroy(finalDish);
+            Destroy(orderPos.transform.GetChild(0));
+            
+        }
+        else
+        {
+            amount.SetText("-5 Pontos");
+            amount.color = Color.red;
+            incorrect.enabled = true;
+            money.enabled = true;
+            amount.enabled = true;
+
+            yield return new WaitForSeconds(3f);
+
+            isCooking = false;
+            currentIngredients.Clear();
+            money.enabled = false;
+            correct.enabled = false;
+            incorrect.enabled = false;
+            amount.enabled = false;
+            clients.enabled = true;
+            cooking.enabled = false;
+            Destroy(orderPos.transform.GetChild(0));
+        }
     }
 
-    private IEnumerator ShowWarning() 
+    public void DestroyIngredient(GameObject target)
+    {
+        IngredientIdentifier identifier = target.GetComponent<IngredientIdentifier>();
+        if (identifier != null && currentIngredients.Contains(identifier.ingredientType))
+        {
+            currentIngredients.Remove(identifier.ingredientType);
+        }
+
+        delete.Play();
+        Destroy(target);
+    }
+
+    private IEnumerator ShowWarning()
     {
         warningTxt.SetActive(true);
         yield return new WaitForSeconds(2f);
         warningTxt.SetActive(false);
     }
-        
+
     private IEnumerator ShowEmpty()
     {
         emptyTxt.SetActive(true);
@@ -197,12 +265,5 @@ public class FoodsHandler : MonoBehaviour
     {
         yield return null;
         isChoosing = false;
-    }
-
-    public void DestroyIngredient(GameObject target) 
-    {
-        ingredientQuant--;
-        delete.Play();
-        Destroy(target);
     }
 }

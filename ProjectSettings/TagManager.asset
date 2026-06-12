@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - MusicManager
+  - OrderPos
+  - CookSlider
+  - CookCanvas
   layers:
   - Default
   - TransparentFX

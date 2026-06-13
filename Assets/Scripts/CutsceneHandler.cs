@@ -17,7 +17,7 @@ public class CutsceneHandler : MonoBehaviour
 
     private IEnumerator EndCutscene() 
     {
-        yield return new WaitForSeconds(19);
+        yield return new WaitForSeconds(17.9f);
         SceneManager.LoadScene(1);
     }
 }

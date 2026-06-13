@@ -21,6 +21,9 @@ public class FoodsHandler : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] private AudioSource create;
     [SerializeField] private AudioSource delete;
+    [SerializeField] private AudioSource right;
+    [SerializeField] private AudioSource wrong;
+    [SerializeField] private AudioSource cookingSound;
     [Header("Crafting System")]
     [SerializeField] private CraftingManager craftingManager;
     [Header("Canvas")]
@@ -31,7 +34,6 @@ public class FoodsHandler : MonoBehaviour
     [SerializeField] private Image incorrect;
     [SerializeField] private Image money;
     [SerializeField] private TMP_Text amount;
-    // Simple list to track current ingredients
     private List<Ingredients> currentIngredients = new List<Ingredients>();
     private bool isChoosing;
     private bool isCooking;
@@ -64,14 +66,12 @@ public class FoodsHandler : MonoBehaviour
         if (prefabs == null) return;
         if (isChoosing) return;
         if (isCooking) return;
-        // Check if we already have 5 ingredients
         if (currentIngredients.Count >= 5)
         {
             StartCoroutine(ShowWarning());
             return;
         }
         isChoosing = true;
-        // Get the prefab associated with this ingredient
         GameObject prefab = ingredientData.ingredientPrefab;
         create.Play();
         for (int i = 0; i < positions.Length; i++)
@@ -80,7 +80,6 @@ public class FoodsHandler : MonoBehaviour
             {
                 GameObject instance = Instantiate(prefab, positions[i]);
                 instance.GetComponent<RectTransform>().localScale *= 0.8f;
-                // Add identifier to the instantiated object (for destruction tracking)
                 IngredientIdentifier identifier = instance.AddComponent<IngredientIdentifier>();
                 identifier.ingredientType = ingredientData.ingredientType;
                 currentIngredients.Add(ingredientData.ingredientType);
@@ -98,13 +97,13 @@ public class FoodsHandler : MonoBehaviour
             return;
         }
         StartCoroutine(MoveIngredients());
+        cookingSound.Play();
     }
     private IEnumerator MoveIngredients()
     {
         orderUI = orderPos.GetComponentInChildren<OrdersUIHandler>();
         bool correctCheck = false;
         isCooking = true;
-        // Get all ingredient GameObjects to move
         List<Transform> ingredientsToMove = new List<Transform>();
         for (int i = 0; i < positions.Length; i++)
         {
@@ -146,7 +145,6 @@ public class FoodsHandler : MonoBehaviour
             GameObject explosion = Instantiate(explosionFx, position);
             Destroy(explosion, 1f);
         }
-        // CHECK RECIPE USING THE CRAFTING MANAGER
         GameObject craftedResult = null;
         if (craftingManager != null)
         {
@@ -157,13 +155,11 @@ public class FoodsHandler : MonoBehaviour
         {
             Debug.LogError("CraftingManager not assigned!");
         }
-        // Delete all ingredients
         foreach (Transform ingredient in ingredientsToMove)
         {
             if (ingredient != null)
                 Destroy(ingredient.gameObject);
         }
-        // Handle the result
         if (craftedResult != null)
         {
             correctCheck = true;
@@ -173,6 +169,7 @@ public class FoodsHandler : MonoBehaviour
             {
                 if (finalDish.GetComponent<TypeFood>().type == 0)
                 {
+                    right.Play();
                     moneyValue.SetMoney(20);
                     currentIngredients.Clear();
                     amount.SetText("+ 20 Pontos");
@@ -193,6 +190,7 @@ public class FoodsHandler : MonoBehaviour
 
                 else if (finalDish.GetComponent<TypeFood>().type == 1)
                 {
+                    right.Play();
                     moneyValue.SetMoney(10);
                     currentIngredients.Clear();
                     amount.SetText("+ 10 Pontos");
@@ -213,6 +211,7 @@ public class FoodsHandler : MonoBehaviour
 
                 else if (finalDish.GetComponent<TypeFood>().type == 2)
                 {
+                    right.Play();
                     moneyValue.SetMoney(5);
                     currentIngredients.Clear();
                     amount.SetText("+ 5 Pontos");
@@ -234,6 +233,7 @@ public class FoodsHandler : MonoBehaviour
 
             else
             {
+                wrong.Play();
                 currentIngredients.Clear();
                 amount.SetText("+ 0 Pontos");
                 amount.color = Color.red;
@@ -253,6 +253,7 @@ public class FoodsHandler : MonoBehaviour
         }
         else if(craftedResult == null && !correctCheck)
         {
+            wrong.Play();
             moneyValue.SetMoney(-5);
             amount.SetText("-5 Pontos");
             amount.color = Color.red;

@@ -11,8 +11,15 @@ public class ClientSceneChanger : MonoBehaviour
     [SerializeField] private Slider orderSlider;
     [SerializeField] private Slider cookingSlider;
 
+    private Pause pause;
+
     public void GoCook() 
     {
+        if (pause == null)
+            pause = GameObject.Find("PauseBttn").GetComponent<Pause>();
+
+        pause.ChangeButton();
+
         orderPos = GameObject.FindGameObjectWithTag("OrderPos").GetComponent<Transform>();
         cookingSlider = GameObject.FindGameObjectWithTag("CookSlider").GetComponent<Slider>();
         cookingCanvas = GameObject.FindGameObjectWithTag("CookCanvas").GetComponent<Canvas>();

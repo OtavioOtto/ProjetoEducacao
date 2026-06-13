@@ -4339,7 +4339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236c9a3b6d7acb14a87409aa26db2721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pause
-  shadow: {fileID: 251800702}
   panel: {fileID: 1140255028}
 --- !u!114 &851715289
 MonoBehaviour:
@@ -10783,9 +10782,9 @@ RectTransform:
   - {fileID: 1144152001}
   m_Father: {fileID: 1401345614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -860, y: -441}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 100, y: 99}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1774081118
@@ -12042,7 +12041,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -859, y: -266}
+  m_AnchoredPosition: {x: 100, y: 281}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &2041732360

@@ -19,6 +19,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     private CanvasGroup canvasGroup;
     private bool isPotentialDrag = true;
     private float remainingTime;
+    private Pause pause;
 
     TimeLimitSlider timer;
 
@@ -126,6 +127,8 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
             return;
         }
 
+        if (pause == null)
+            pause = GameObject.Find("PauseBttn").GetComponent<Pause>();
 
         if (gameObject.transform.parent.name.Equals("OrdersSpawn"))
         {
@@ -141,6 +144,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
             rectTransform.localScale *= 2.5f;
             cookBttn.SetActive(true);
             draggable = false;
+            pause.ChangeButton();
         }
         else
         {
@@ -156,6 +160,7 @@ public class OrdersUIHandler : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
             rectTransform.localPosition = localPos;
             rectTransform.localScale /= 2.5f;
             draggable = true;
+            pause.ChangeButton();
         }
     }
 }

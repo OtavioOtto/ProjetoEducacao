@@ -6277,7 +6277,7 @@ MonoBehaviour:
     craftedFoodPrefab: {fileID: 6186730650967123478, guid: 5c8735626fc206348ba93ef130cf3f35, type: 3}
   - recipeName: Nugget
     requiredIngredients: 0e000000
-    craftedFoodPrefab: {fileID: 6186730650967123478, guid: 5c8735626fc206348ba93ef130cf3f35, type: 3}
+    craftedFoodPrefab: {fileID: 5602313958365872756, guid: 844d0f00cdb28cb46ba8beb9bd00ce8a, type: 3}
   - recipeName: Salgadinhos
     requiredIngredients: 1300000007000000
     craftedFoodPrefab: {fileID: 4866145239991957016, guid: d3305d6e774648e49bf6a6a932257566, type: 3}
